@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Gradle - Plugin: nebula.maven-manifest</title>
+<link href="//fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/shared-assets/shared/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/shared-assets/shared/styles/main.css" />
+<link rel="shortcut icon" href="/shared-assets/shared/images/elephant.ico">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.3.0/lodash.min.js"></script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-4207603-1', 'auto', 'default', {'allowLinker': true});
+        ga('default.send', 'pageview');
+
+        ga('default.require', 'linker');
+        ga('default.linker:autoLink', ['gradle.com', 'gradle.org'], false, true);
+        ga('default.set', 'transport', 'beacon');
+
+        
+          ga('create', 'UA-4207603-12', 'auto', 'plugins');
+          ga('plugins.send', 'pageview');
+          ga('plugins.set', 'transport', 'beacon');
+        
+      </script>
+</head>
+<body>
+<div id="content-wrapper">
+<header>
+<nav class="navbar navbar-default">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="https://gradle.org/">
+<img src="/shared-assets/shared/images/elephant-corner.png" width="32px" height="24px" />
+</a>
+</div>
+<div class="collapse navbar-collapse" id="navbar-collapse">
+<ul class="nav navbar-nav">
+<li>
+<a href="https://plugins.gradle.org/">Plugins</a>
+</li>
+<li class="dropdown" id="documentation-dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Documentation <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li id="submit-documentation-link">
+<a href="https://plugins.gradle.org/docs/submit">
+How do I add my plugin to the plugin portal?
+</a>
+</li>
+<li id="plugin-publish-plugin-documentation-link">
+<a href="https://plugins.gradle.org/docs/publish-plugin">
+How do I use the “plugin-publish” plugin?
+</a>
+</li>
+<li id="reclaiming-documentation-link">
+<a href="https://plugins.gradle.org/docs/reclaiming">
+How do I link an existing plugin to my account?
+</a>
+</li>
+<li id="mirroring-documentation-link">
+<a href="https://plugins.gradle.org/docs/mirroring">
+How do I mirror the plugin portal?
+</a>
+</li>
+<li id="further-help-link">
+<a href="https://plugins.gradle.org/docs/get-help">
+How do I get further help?
+</a>
+</li>
+</ul>
+</li>
+<li id="forums-link">
+<a href="http://discuss.gradle.org" target="_blank">Forums</a>
+</li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a id="plugin-approval-action" href="https://plugins.gradle.org/admin/pluginapproval">
+Plugin Approval
+</a>
+</li>
+<li>
+<a id="profile-action" href="https://plugins.gradle.org/u/shad0w1nk">
+shad0w1nk
+</a>
+</li>
+<li>
+<a id="logout-action" href="https://login.gradle.org/user/logout" data-toggle="tooltip" data-placement="bottom" title="Log out">
+&nbsp;&nbsp;&nbsp;&nbsp;
+<span class="glyphicon glyphicon-log-out" aria-hidden="true">
+</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div id="content">
+<div class="container plugin-page">
+<div class="clearfix">
+<div class="row top-row">
+<div class="col-md-3 logo-wrapper">
+<div class="logo">
+<a href="https://plugins.gradle.org/">
+<img src="/shared-assets/shared/images/gradle-logo-horizontal.svg" height="41.81019123411332px" width="160.0px" alt="Gradle Logo" />
+</a>
+</div>
+</div>
+<div class="col-md-4 col-md-offset-5">
+<p>Search Gradle plugins</p>
+<form id="search" action="/search">
+<div class="form-group">
+<input class="form-control" type="text" name="term" id="term" placeholder="search by tag or keyword" />
+</div>
+</form>
+</div>
+</div>
+</div>
+<div class="row plugin-detail box">
+<div class="detail">
+<a href="/plugin/nebula.maven-manifest">
+<h1>nebula.maven-manifest</h1>
+</a>
+<div class="plugin-info">
+<p class="description-text">Append additional information from our info plugin to the properties section of the pom</p>
+</div>
+<p class="website"><a href="https://github.com/nebula-plugins/nebula-publishing-plugin">https://github.com/nebula-plugins/nebula-publishing-plugin</a></p>
+<div class="plugin-about">
+<ul class="list-inline plugin-tags">
+<li>
+<a class="plugin-tag" href="/search?term=nebula">#nebula</a>
+</li>
+<li>
+<a class="plugin-tag" href="/search?term=publish">#publish</a>
+</li>
+<li>
+<a class="plugin-tag" href="/search?term=maven">#maven</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="version-info well well-sm">
+<h3>Version 8.0.0 (latest) </h3>
+<p class="version-created-date">
+Created 14 June 2018.
+</p>
+<div class="version-description">
+<span class="description-text">Append additional information from our info plugin to the properties section of the pom</span>
+</div>
+<div class="other-versions dropdown">
+<a class="dropdown-toggle" type="button" data-toggle="dropdown">Other versions&nbsp;<span class="caret"></span></a>
+<ul class="dropdown-menu">
+
+<li>
+<a href="/plugin/nebula.maven-manifest/7.2.4">7.2.4</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.2.3">7.2.3</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.2.2">7.2.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.2.1">7.2.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.2.0">7.2.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.1.0">7.1.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.12">7.0.12</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.11">7.0.11</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.10">7.0.10</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.9">7.0.9</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.8">7.0.8</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.7">7.0.7</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.6">7.0.6</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.5">7.0.5</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.4">7.0.4</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.3">7.0.3</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.2">7.0.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.1">7.0.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/7.0.0">7.0.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/6.1.3">6.1.3</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/6.1.2">6.1.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/6.1.1">6.1.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/6.1.0">6.1.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/6.0.0">6.0.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.5">5.1.5</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.4">5.1.4</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.3">5.1.3</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.2">5.1.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.1">5.1.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.1.0">5.1.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.0.1">5.0.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/5.0.0">5.0.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.10.0">4.10.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.9.1">4.9.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.9.0">4.9.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.8.1">4.8.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.8.0">4.8.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.7.0">4.7.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.6.0">4.6.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.4.4">4.4.4</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.4.3">4.4.3</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.4.2">4.4.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.4.1">4.4.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.3.2">4.3.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.3.1">4.3.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.3.0">4.3.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.2.2">4.2.2</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.2.1">4.2.1</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.2.0">4.2.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.1.0">4.1.0</a>
+</li>
+<li>
+<a href="/plugin/nebula.maven-manifest/4.0.1">4.0.1</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="use">
+<h3>Build script snippet for plugins DSL for Gradle 2.1 and later:</h3>
+<pre><code class="language-groovy">plugins {
+  id "nebula.maven-manifest" version "8.0.0"
+}</code></pre>
+<h3>Build script snippet for use in older Gradle versions or where dynamic configuration is required:</h3>
+<pre><code class="language-groovy">buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.netflix.nebula:nebula-publishing-plugin:8.0.0"
+  }
+}
+
+apply plugin: "nebula.maven-manifest"</code></pre>
+</div>
+<div id="new-plugin-mechanism-info">
+<div>
+<a data-toggle="collapse" data-parent="#new-plugin-mechanism-info" href="#new-plugin-mechanism-info-body">
+<div class="panel-heading">
+<p>
+<span class="glyphicon glyphicon-chevron-right"></span> About the new plugin mechanism…
+</p>
+</div>
+</a>
+</div>
+<div id="new-plugin-mechanism-info-body" class="panel-collapse collapse">
+<div class="panel-body">
+<h3>Why?</h3>
+<p>
+The new way to add plugins to a project is much more than a more convenient syntax.
+The new DSL is processed very differently to the old one.
+The new mechanism allows Gradle to determine the plugins in use very early and very quickly.
+This allows Gradle to do smart things such as:
+</p>
+<ul>
+<li>Optimize the loading and reuse of plugin classes.</li>
+<li>Allow different plugins to use different versions of dependencies.</li>
+<li>Provide editors detailed information about the potential properties and values in the buildscript for editing assistance.</li>
+</ul>
+<p>
+This requires that plugins be specified in a way that Gradle can easily and quickly extract, before executing the rest of the build script.
+It also requires that the definition of plugins to use be somewhat static.
+</p>
+<p>
+There are some key differences between the new plugin mechanism and the “traditional” <code>apply()</code> method mechanism.
+There are also some constraints, some of which are temporary limitations while the mechanism is still being developed and some are inherent to the new approach.
+</p>
+<h3>Constrained syntax.</h3>
+<p>
+The new <code>plugins {}</code> block does not support arbitrary Groovy code.
+It is constrained, in order to be idempotent (produce the same result every time) and side effect free (safe for Gradle to execute at any time).
+</p>
+<p>
+The form is:
+</p>
+<pre><code class="language-groovy">plugins {
+    id «plugin id» version «plugin version»
+}</code></pre>
+<p>
+Where <code>«plugin version»</code> and <code>«plugin id»</code> must be constant, literal, strings.
+No other statements are allowed; their presence will cause a compilation error.
+</p>
+<p>
+The <code>plugins {}</code> block must also be a top level statement in the buildscript.
+It cannot be nested inside another construct (e.g. an if-statement or for-loop).
+</p>
+<h3>Can only be used in build scripts.</h3>
+<p>
+The <code>plugins {}</code> block can currently only be used in a project's build script.
+It cannot be used in script plugins, the settings.gradle file or init scripts.
+</p>
+<p>
+<strong>Future versions of Gradle will remove this restriction.</strong>
+</p>
+<h3>Cannot be used in conjunction with subprojects {}, allprojects {} etc.</h3>
+<p>
+It is not possible to use the familiar pattern of applying a plugin to multiple projects at once using <code>subprojects {}</code> etc. at the moment.
+There is currently no mechanism for applying a plugin to multiple projects at once.
+At the moment, each project that requires a plugin must declare so in the <code>plugins {}</code> block in its buildscript.
+</p>
+<p>
+<strong>Future versions of Gradle will remove this restriction.</strong>
+</p>
+<p>
+If the current limitations of the new plugin mechanism are problematic for your build, the recommended approach is to use the “traditional” mechanism for the time being.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer>
+<p class="copyright">&copy; <a href="https://gradle.org/company/">Gradle, Inc.</a> 2018</p>
+</footer>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+<script type="text/javascript">
+piAId = '69052';
+piCId = '28805';
+
+(function() {
+function async_load(){
+var s = document.createElement('script'); s.type = 'text/javascript';
+s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js';
+var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c);
+}
+if(window.attachEvent) { window.attachEvent('onload', async_load); }
+else { window.addEventListener('load', async_load, false); }
+})();
+</script>
+<script src="/shared-assets/shared/scripts/prism.js"></script>
+<script src="/shared-assets/shared/scripts/collapse.js"></script>
+</body>
+</html>

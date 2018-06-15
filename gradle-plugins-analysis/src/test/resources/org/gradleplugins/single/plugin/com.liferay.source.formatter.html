@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Gradle - Plugin: com.liferay.source.formatter</title>
+<link href="//fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/shared-assets/shared/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/shared-assets/shared/styles/main.css" />
+<link rel="shortcut icon" href="/shared-assets/shared/images/elephant.ico">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.3.0/lodash.min.js"></script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-4207603-1', 'auto', 'default', {'allowLinker': true});
+        ga('default.send', 'pageview');
+
+        ga('default.require', 'linker');
+        ga('default.linker:autoLink', ['gradle.com', 'gradle.org'], false, true);
+        ga('default.set', 'transport', 'beacon');
+
+        
+          ga('create', 'UA-4207603-12', 'auto', 'plugins');
+          ga('plugins.send', 'pageview');
+          ga('plugins.set', 'transport', 'beacon');
+        
+      </script>
+</head>
+<body>
+<div id="content-wrapper">
+<header>
+<nav class="navbar navbar-default">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="https://gradle.org/">
+<img src="/shared-assets/shared/images/elephant-corner.png" width="32px" height="24px" />
+</a>
+</div>
+<div class="collapse navbar-collapse" id="navbar-collapse">
+<ul class="nav navbar-nav">
+<li>
+<a href="https://plugins.gradle.org/">Plugins</a>
+</li>
+<li class="dropdown" id="documentation-dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Documentation <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+<li id="submit-documentation-link">
+<a href="https://plugins.gradle.org/docs/submit">
+How do I add my plugin to the plugin portal?
+</a>
+</li>
+<li id="plugin-publish-plugin-documentation-link">
+<a href="https://plugins.gradle.org/docs/publish-plugin">
+How do I use the “plugin-publish” plugin?
+</a>
+</li>
+<li id="reclaiming-documentation-link">
+<a href="https://plugins.gradle.org/docs/reclaiming">
+How do I link an existing plugin to my account?
+</a>
+</li>
+<li id="mirroring-documentation-link">
+<a href="https://plugins.gradle.org/docs/mirroring">
+How do I mirror the plugin portal?
+</a>
+ </li>
+<li id="further-help-link">
+<a href="https://plugins.gradle.org/docs/get-help">
+How do I get further help?
+</a>
+</li>
+</ul>
+</li>
+<li id="forums-link">
+<a href="http://discuss.gradle.org" target="_blank">Forums</a>
+</li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a id="plugin-approval-action" href="https://plugins.gradle.org/admin/pluginapproval">
+Plugin Approval
+</a>
+</li>
+<li>
+<a id="profile-action" href="https://plugins.gradle.org/u/shad0w1nk">
+shad0w1nk
+</a>
+</li>
+<li>
+<a id="logout-action" href="https://login.gradle.org/user/logout" data-toggle="tooltip" data-placement="bottom" title="Log out">
+&nbsp;&nbsp;&nbsp;&nbsp;
+<span class="glyphicon glyphicon-log-out" aria-hidden="true">
+</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div id="content">
+<div class="container plugin-page">
+<div class="clearfix">
+<div class="row top-row">
+<div class="col-md-3 logo-wrapper">
+<div class="logo">
+<a href="https://plugins.gradle.org/">
+<img src="/shared-assets/shared/images/gradle-logo-horizontal.svg" height="41.81019123411332px" width="160.0px" alt="Gradle Logo" />
+</a>
+</div>
+</div>
+<div class="col-md-4 col-md-offset-5">
+<p>Search Gradle plugins</p>
+<form id="search" action="/search">
+<div class="form-group">
+<input class="form-control" type="text" name="term" id="term" placeholder="search by tag or keyword" />
+</div>
+</form>
+</div>
+</div>
+</div>
+<div class="row plugin-detail box">
+<div class="detail">
+<a href="/plugin/com.liferay.source.formatter">
+<h1>com.liferay.source.formatter</h1>
+</a>
+<div class="plugin-info">
+<p class="description-text">The Source Formatter Gradle plugin lets you format project files using the Liferay Source Formatter tool.</p>
+</div>
+<p class="website"><a href="https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-source-formatter">https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-source-formatter</a></p>
+<div class="plugin-about">
+<ul class="list-inline plugin-tags">
+<li>
+<a class="plugin-tag" href="/search?term=java">#java</a>
+</li>
+<li>
+<a class="plugin-tag" href="/search?term=liferay">#liferay</a>
+</li>
+<li>
+<a class="plugin-tag" href="/search?term=style">#style</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="version-info well well-sm">
+<h3>Version 2.3.188 (latest) </h3>
+<p class="version-created-date">
+Created 14 June 2018.
+</p>
+<div class="version-description">
+<span class="description-text">The Source Formatter Gradle plugin lets you format project files using the Liferay Source Formatter tool.</span>
+</div>
+<div class="other-versions dropdown">
+<a class="dropdown-toggle" type="button" data-toggle="dropdown">Other versions&nbsp;<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.187">2.3.187</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.186">2.3.186</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.185">2.3.185</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.184">2.3.184</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.183">2.3.183</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.182">2.3.182</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.181">2.3.181</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.180">2.3.180</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.179">2.3.179</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.178">2.3.178</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.177">2.3.177</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.176">2.3.176</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.175">2.3.175</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.174">2.3.174</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.173">2.3.173</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.172">2.3.172</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.171">2.3.171</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.170">2.3.170</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.169">2.3.169</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.168">2.3.168</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.167">2.3.167</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.166">2.3.166</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.165">2.3.165</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.164">2.3.164</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.163">2.3.163</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.162">2.3.162</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.161">2.3.161</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.160">2.3.160</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.159">2.3.159</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.158">2.3.158</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.157">2.3.157</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.156">2.3.156</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.155">2.3.155</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.154">2.3.154</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.153">2.3.153</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.152">2.3.152</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.151">2.3.151</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.150">2.3.150</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.149">2.3.149</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.148">2.3.148</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.147">2.3.147</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.146">2.3.146</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.145">2.3.145</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.144">2.3.144</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.143">2.3.143</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.142">2.3.142</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.141">2.3.141</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.140">2.3.140</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.139">2.3.139</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.138">2.3.138</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.137">2.3.137</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.136">2.3.136</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.135">2.3.135</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.134">2.3.134</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.133">2.3.133</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.132">2.3.132</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.131">2.3.131</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.130">2.3.130</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.129">2.3.129</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.128">2.3.128</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.127">2.3.127</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.126">2.3.126</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.125">2.3.125</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.124">2.3.124</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.123">2.3.123</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.122">2.3.122</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.121">2.3.121</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.120">2.3.120</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.119">2.3.119</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.118">2.3.118</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.117">2.3.117</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.116">2.3.116</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.115">2.3.115</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.114">2.3.114</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.113">2.3.113</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.112">2.3.112</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.111">2.3.111</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.110">2.3.110</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.109">2.3.109</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.108">2.3.108</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.107">2.3.107</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.106">2.3.106</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.105">2.3.105</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.104">2.3.104</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.103">2.3.103</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.102">2.3.102</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.101">2.3.101</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.100">2.3.100</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.99">2.3.99</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.98">2.3.98</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.97">2.3.97</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.96">2.3.96</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.95">2.3.95</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.94">2.3.94</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.93">2.3.93</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.92">2.3.92</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.91">2.3.91</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.90">2.3.90</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.89">2.3.89</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.88">2.3.88</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.87">2.3.87</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.86">2.3.86</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.85">2.3.85</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.84">2.3.84</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.83">2.3.83</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.82">2.3.82</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.81">2.3.81</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.80">2.3.80</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.79">2.3.79</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.78">2.3.78</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.77">2.3.77</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.76">2.3.76</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.75">2.3.75</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.74">2.3.74</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.73">2.3.73</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.72">2.3.72</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.71">2.3.71</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.70">2.3.70</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.69">2.3.69</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.68">2.3.68</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.67">2.3.67</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.66">2.3.66</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.65">2.3.65</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.64">2.3.64</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.63">2.3.63</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.62">2.3.62</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.61">2.3.61</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.60">2.3.60</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.59">2.3.59</a>
+</li>
+<li>
+<a href="/plugin/com.liferay.source.formatter/2.3.58">2.3.58</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="use">
+<h3>Build script snippet for plugins DSL for Gradle 2.1 and later:</h3>
+<pre><code class="language-groovy">plugins {
+  id "com.liferay.source.formatter" version "2.3.188"
+}</code></pre>
+<h3>Build script snippet for use in older Gradle versions or where dynamic configuration is required:</h3>
+<pre><code class="language-groovy">buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.com.liferay:gradle-plugins-source-formatter:2.3.188"
+  }
+}
+
+apply plugin: "com.liferay.source.formatter"</code></pre>
+</div>
+<div id="new-plugin-mechanism-info">
+<div>
+<a data-toggle="collapse" data-parent="#new-plugin-mechanism-info" href="#new-plugin-mechanism-info-body">
+<div class="panel-heading">
+<p>
+<span class="glyphicon glyphicon-chevron-right"></span> About the new plugin mechanism…
+</p>
+</div>
+</a>
+</div>
+<div id="new-plugin-mechanism-info-body" class="panel-collapse collapse">
+<div class="panel-body">
+<h3>Why?</h3>
+<p>
+The new way to add plugins to a project is much more than a more convenient syntax.
+The new DSL is processed very differently to the old one.
+The new mechanism allows Gradle to determine the plugins in use very early and very quickly.
+This allows Gradle to do smart things such as:
+</p>
+<ul>
+<li>Optimize the loading and reuse of plugin classes.</li>
+<li>Allow different plugins to use different versions of dependencies.</li>
+<li>Provide editors detailed information about the potential properties and values in the buildscript for editing assistance.</li>
+</ul>
+<p>
+This requires that plugins be specified in a way that Gradle can easily and quickly extract, before executing the rest of the build script.
+It also requires that the definition of plugins to use be somewhat static.
+</p>
+<p>
+There are some key differences between the new plugin mechanism and the “traditional” <code>apply()</code> method mechanism.
+There are also some constraints, some of which are temporary limitations while the mechanism is still being developed and some are inherent to the new approach.
+</p>
+<h3>Constrained syntax.</h3>
+<p>
+The new <code>plugins {}</code> block does not support arbitrary Groovy code.
+It is constrained, in order to be idempotent (produce the same result every time) and side effect free (safe for Gradle to execute at any time).
+</p>
+<p>
+The form is:
+</p>
+<pre><code class="language-groovy">plugins {
+    id «plugin id» version «plugin version»
+}</code></pre>
+<p>
+Where <code>«plugin version»</code> and <code>«plugin id»</code> must be constant, literal, strings.
+No other statements are allowed; their presence will cause a compilation error.
+</p>
+<p>
+The <code>plugins {}</code> block must also be a top level statement in the buildscript.
+It cannot be nested inside another construct (e.g. an if-statement or for-loop).
+</p>
+<h3>Can only be used in build scripts.</h3>
+<p>
+The <code>plugins {}</code> block can currently only be used in a project's build script.
+It cannot be used in script plugins, the settings.gradle file or init scripts.
+</p>
+<p>
+<strong>Future versions of Gradle will remove this restriction.</strong>
+</p>
+<h3>Cannot be used in conjunction with subprojects {}, allprojects {} etc.</h3>
+<p>
+It is not possible to use the familiar pattern of applying a plugin to multiple projects at once using <code>subprojects {}</code> etc. at the moment.
+There is currently no mechanism for applying a plugin to multiple projects at once.
+At the moment, each project that requires a plugin must declare so in the <code>plugins {}</code> block in its buildscript.
+</p>
+<p>
+<strong>Future versions of Gradle will remove this restriction.</strong>
+</p>
+<p>
+If the current limitations of the new plugin mechanism are problematic for your build, the recommended approach is to use the “traditional” mechanism for the time being.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer>
+<p class="copyright">&copy; <a href="https://gradle.org/company/">Gradle, Inc.</a> 2018</p>
+</footer>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+<script type="text/javascript">
+piAId = '69052';
+piCId = '28805';
+
+(function() {
+function async_load(){
+var s = document.createElement('script'); s.type = 'text/javascript';
+s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js';
+var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c);
+}
+if(window.attachEvent) { window.attachEvent('onload', async_load); }
+else { window.addEventListener('load', async_load, false); }
+})();
+</script>
+<script src="/shared-assets/shared/scripts/prism.js"></script>
+<script src="/shared-assets/shared/scripts/collapse.js"></script>
+</body>
+</html>

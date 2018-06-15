@@ -1,0 +1,16 @@
+buildscript {
+    dependencies {
+        classpath "org.gradleplugins:gradle-plugins-analysis:latest.integration"
+    }
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'org.gradleplugins.do-it'
+
+apply plugin: 'org.gradleplugins.plugin-portal'
