@@ -14,3 +14,5 @@ plugins {
 apply plugin: 'org.gradleplugins.do-it'
 
 apply plugin: 'org.gradleplugins.plugin-portal'
+
+task continuousIntegration
