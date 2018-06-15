@@ -15,4 +15,8 @@ apply plugin: 'org.gradleplugins.do-it'
 
 apply plugin: 'org.gradleplugins.plugin-portal'
 
-task continuousIntegration
+task continuousIntegration {
+    if (System.env.TRAVIS_EVENT_TYPE == 'cron') {
+        println "Inside cron job"  // Just for testing
+    }
+}
