@@ -9,6 +9,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradleplugins.ReleasedPluginInformation;
 import org.gradleplugins.tasks.AnalyzeBytecode;
+import org.gradleplugins.tasks.GeneratePluginAnalysisDetailPage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +45,10 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
                 analyzeTask.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
 
                 analyzeAllTask.dependsOn(analyzeTask);
+
+                GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().maybeCreate("generate" + p.getPluginId(), GeneratePluginAnalysisDetailPage.class);
+                analysisDetailPage.getDetailHtml().set(project.getLayout().getBuildDirectory().file("report/" + p.getPluginId()));
+                analysisDetailPage.getReport().set(analyzeTask.getReport());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
