@@ -40,6 +40,9 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
 
                 AnalyzeBytecode analyzeTask = project.getTasks().maybeCreate(p.getPluginId(), AnalyzeBytecode.class);
                 analyzeTask.getJar().set(project.getLayout().file(project.provider(() -> c.getSingleFile())));
+                analyzeTask.getPluginId().set(p.getPluginId());
+                analyzeTask.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
+
                 analyzeAllTask.dependsOn(analyzeTask);
             }
         } catch (FileNotFoundException e) {

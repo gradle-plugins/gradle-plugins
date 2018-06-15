@@ -1,30 +1,53 @@
 package org.gradleplugins.tasks;
 
+import com.google.gson.Gson;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
+import org.apache.commons.io.IOUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.internal.impldep.aQute.bnd.build.Run;
+import org.gradleplugins.AnalyzeReport;
+import org.gradleplugins.AnalyzeViolation;
 import org.objectweb.asm.*;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnalyzeBytecode extends DefaultTask {
+    private final Property<String> pluginId = getProject().getObjects().property(String.class);
     private final RegularFileProperty jar = newInputFile();
+    private final RegularFileProperty report = newOutputFile();
 
+    @InputFile
     public RegularFileProperty getJar() {
         return jar;
+    }
+
+    @Input
+    public Property<String> getPluginId() {
+        return pluginId;
+    }
+
+    @OutputFile
+    public RegularFileProperty getReport() {
+        return report;
     }
 
     @TaskAction
     private void doAnalysis() {
 
+
+        AnalyzeReport report = new AnalyzeReport(pluginId.get());
         ClassVisitor cl=new ClassVisitor(Opcodes.ASM4) {
 
             /**
@@ -86,7 +109,7 @@ public class AnalyzeBytecode extends DefaultTask {
                 System.out.println("Field: "+name+" "+desc+" value:"+value);
                 if (isInternalApis(desc)) {
                     System.out.println("USING INTERNAL APIS (FIELD)");
-                    throw new RuntimeException("Using internal APIS (field) " + desc);
+                    report.getViolations().add(new AnalyzeViolation("Using internal APIS (field) " + desc));
                 }
                 return super.visitField(access, name, desc, signature, value);
             }
@@ -111,7 +134,7 @@ public class AnalyzeBytecode extends DefaultTask {
                         System.out.println("Type insn: " + type);
                         if (isInternalApis(type)) {
                             System.out.println("USING INTERNAL APIS (INSTANTIATE)");
-                            throw new RuntimeException("Using internal APIS (instantiate) " + type);
+                            report.getViolations().add(new AnalyzeViolation("Using internal APIS (instantiate) " + type));
                         }
                         super.visitTypeInsn(opcode, type);
                     }
@@ -151,12 +174,21 @@ public class AnalyzeBytecode extends DefaultTask {
                     classReader.accept(cl, 0);
                 }
             }
+
+            Gson gson = new Gson();
+            try (OutputStream outStream = new FileOutputStream(this.report.getAsFile().get())) {
+                IOUtils.write(gson.toJson(report), outStream, Charset.defaultCharset());
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
     private static boolean isInternalApis(String desc) {
+        // TODO: Starts with 'org/gradle'
+        // TODO: Ignore dep.impl. shadow package
         return desc.contains("org/gradle") && desc.contains("/internal/");
     }
 }
