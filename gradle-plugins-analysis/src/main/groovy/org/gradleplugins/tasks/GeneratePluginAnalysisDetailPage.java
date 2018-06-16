@@ -8,9 +8,11 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.gradleplugins.AnalyzeReport;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 public class GeneratePluginAnalysisDetailPage extends DefaultTask {
     private final RegularFileProperty report = newInputFile();
@@ -28,23 +30,24 @@ public class GeneratePluginAnalysisDetailPage extends DefaultTask {
 
     @TaskAction
     private void doGenerateDetail() {
-        Gson gson = new Gson();
         AnalyzeReport r = null;
+        String prettyJSONString = null;
         try (InputStream inStream = new FileInputStream(report.get().getAsFile())) {
-            r = gson.fromJson(IOUtils.toString(inStream, Charset.defaultCharset()), AnalyzeReport.class);
+            prettyJSONString = IOUtils.toString(inStream, Charset.defaultCharset());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Yaml yaml = new Yaml();
+
+        Map<String,Object> map = (Map<String, Object>) yaml.load(prettyJSONString);
+
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(detailHtml.getAsFile().get())))) {
-            out.println("<html>");
-            out.println("<body>");
-            out.println("<h1>" + r.getPluginId() + "</h1>");
-            out.println("<h2>There are " + r.getViolations().size() + " violation" + (r.getViolations().size() == 1 ? "" : "s") + "</h2>");
-            out.println("</body>");
-            out.println("</html>");
+            out.println("---");
+            out.println(yaml.dump(map));
+            out.println("---");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
