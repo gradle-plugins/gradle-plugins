@@ -128,7 +128,7 @@ public class AnalyzeBytecode extends DefaultTask {
             public MethodVisitor visitMethod(int access, String name,
                                              String desc, String signature, String[] exceptions) {
                 System.out.println("Method: "+name+" "+desc);
-                return new MethodVisitor(Opcodes.ASM4) {
+                return new MethodVisitor(Opcodes.ASM5) {
                     @Override
                     public void visitTypeInsn(int opcode, String type) {
                         System.out.println("Type insn: " + type);

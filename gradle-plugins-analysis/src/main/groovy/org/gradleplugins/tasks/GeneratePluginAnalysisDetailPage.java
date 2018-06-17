@@ -46,6 +46,7 @@ public class GeneratePluginAnalysisDetailPage extends DefaultTask {
 
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(detailHtml.getAsFile().get())))) {
             out.println("---");
+            out.println("layout: plugin");
             out.println(yaml.dump(map));
             out.println("---");
         } catch (IOException e) {
