@@ -202,7 +202,7 @@ public class AnalyzeBytecode extends DefaultTask {
 
                 Gson gson = new Gson();
                 try (OutputStream outStream = new FileOutputStream(report)) {
-                    IOUtils.write(gson.toJson(report), outStream, Charset.defaultCharset());
+                    IOUtils.write(gson.toJson(reportAnalysis), outStream, Charset.defaultCharset());
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
