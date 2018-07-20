@@ -95,7 +95,7 @@ public class AnalyzeBytecode extends DefaultTask {
 
         @Override
         public void run() {
-            AnalyzeReport reportAnalysis = new AnalyzeReport(pluginId);
+            final AnalyzeReport reportAnalysis = new AnalyzeReport(pluginId);
             ClassVisitor cl=new ClassVisitor(Opcodes.ASM6) {
 
                 /**
@@ -176,7 +176,7 @@ public class AnalyzeBytecode extends DefaultTask {
                 public MethodVisitor visitMethod(int access, String name,
                                                  String desc, String signature, String[] exceptions) {
 //                    System.out.println("Method: "+name+" "+desc);
-                    return new MethodVisitor(Opcodes.ASM5) {
+                    return new MethodVisitor(Opcodes.ASM6) {
                         @Override
                         public void visitTypeInsn(int opcode, String type) {
 //                            System.out.println("Type insn: " + type);
@@ -230,7 +230,12 @@ public class AnalyzeBytecode extends DefaultTask {
                     throw new UncheckedIOException(e);
                 }
             } catch (Exception ex) {
-                throw new RuntimeException(ex);
+                Gson gson = new Gson();
+                try (OutputStream outStream = new FileOutputStream(report)) {
+                    IOUtils.write(gson.toJson(reportAnalysis.toAnalysisError(ex)), outStream, Charset.defaultCharset());
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
             }
         }
     }

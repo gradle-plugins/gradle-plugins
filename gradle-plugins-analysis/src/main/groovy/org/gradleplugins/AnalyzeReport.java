@@ -22,6 +22,7 @@ import java.util.List;
 public class AnalyzeReport {
     private final String pluginId;
     private final boolean isJarAvailable;
+    private final String error;
     private final List<AnalyzeViolation> violations = new ArrayList<>();
 
     public AnalyzeReport(String pluginId) {
@@ -29,8 +30,13 @@ public class AnalyzeReport {
     }
 
     private AnalyzeReport(String pluginId, boolean isJarAvailable) {
+        this(pluginId, isJarAvailable, "");
+    }
+
+    private AnalyzeReport(String pluginId, boolean isJarAvailable, String error) {
         this.pluginId = pluginId;
         this.isJarAvailable = isJarAvailable;
+        this.error = error;
     }
 
     public String getPluginId() {
@@ -41,11 +47,21 @@ public class AnalyzeReport {
         return isJarAvailable;
     }
 
+    public String getError() {
+        return error;
+    }
+
     public List<AnalyzeViolation> getViolations() {
         return violations;
     }
 
     public static AnalyzeReport noJarResolved(String pluginId) {
         return new AnalyzeReport(pluginId, false);
+    }
+
+    public AnalyzeReport toAnalysisError(Throwable throwable) {
+        AnalyzeReport result = new AnalyzeReport(pluginId, isJarAvailable, throwable.getMessage());
+        result.getViolations().addAll(getViolations());
+        return result;
     }
 }
