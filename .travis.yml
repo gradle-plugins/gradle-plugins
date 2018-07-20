@@ -5,4 +5,4 @@ env:
   - BUCKET=2
   - BUCKET=3
   - BUCKET=4
-script: ./gradlew continuousIntegration
+script: ./gradlew continuousIntegration --scan
