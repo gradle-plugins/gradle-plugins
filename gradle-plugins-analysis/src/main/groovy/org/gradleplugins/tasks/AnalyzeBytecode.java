@@ -96,7 +96,7 @@ public class AnalyzeBytecode extends DefaultTask {
         @Override
         public void run() {
             AnalyzeReport reportAnalysis = new AnalyzeReport(pluginId);
-            ClassVisitor cl=new ClassVisitor(Opcodes.ASM4) {
+            ClassVisitor cl=new ClassVisitor(Opcodes.ASM6) {
 
                 /**
                  * Called when a class is visited. This is the method called first
