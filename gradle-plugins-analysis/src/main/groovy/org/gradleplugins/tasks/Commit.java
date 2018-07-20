@@ -82,6 +82,7 @@ public class Commit extends DefaultTask {
                 // and then commit the changes
                 git.commit().setAuthor("Daniel Lacasse", "daniel@lacasse.io").setMessage("Added testfile").call();
 
+                git.pull().setCredentialsProvider(new UsernamePasswordCredentialsProvider(username.get(), password.get())).setRebase(true).call();
                 git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(username.get(), password.get())).call();
 
             } catch (UnmergedPathsException e) {
