@@ -73,9 +73,9 @@ public class Commit extends DefaultTask {
 
                 // run the add
                 for (File f : source) {
-                    System.out.println(f.getAbsolutePath());
-                    System.out.println(repositoryDirectory.getAsFile().get().getAbsolutePath());
-                    System.out.println(f.getAbsolutePath().replace(repositoryDirectory.getAsFile().get().getAbsolutePath() + "/", ""));
+//                    System.out.println(f.getAbsolutePath());
+//                    System.out.println(repositoryDirectory.getAsFile().get().getAbsolutePath());
+//                    System.out.println(f.getAbsolutePath().replace(repositoryDirectory.getAsFile().get().getAbsolutePath() + "/", ""));
                     git.add().addFilepattern(f.getAbsolutePath().replace(repositoryDirectory.getAsFile().get().getAbsolutePath() + "/", "")).call();
                 }
 
