@@ -52,10 +52,19 @@ public class AnalyzeBytecode extends DefaultTask {
 
     @TaskAction
     private void doAnalysis() {
-        getWorkerExecutor().submit(AnalysisRunnable.class, (workerConfiguration) -> {
-            workerConfiguration.setIsolationMode(IsolationMode.NONE);
-            workerConfiguration.params(pluginId.get(), jar.getAsFile().get(), report.getAsFile().get());
-        });
+        if (!jar.isPresent()) {
+            Gson gson = new Gson();
+            try (OutputStream outStream = new FileOutputStream(report.getAsFile().get())) {
+                IOUtils.write(gson.toJson(AnalyzeReport.noJarResolved(pluginId.get())), outStream, Charset.defaultCharset());
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        } else {
+            getWorkerExecutor().submit(AnalysisRunnable.class, (workerConfiguration) -> {
+                workerConfiguration.setIsolationMode(IsolationMode.NONE);
+                workerConfiguration.params(pluginId.get(), jar.getAsFile().get(), report.getAsFile().get());
+            });
+        }
     }
 
     public static class AnalysisRunnable implements Runnable {
