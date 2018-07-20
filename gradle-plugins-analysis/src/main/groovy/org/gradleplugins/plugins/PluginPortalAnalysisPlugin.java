@@ -33,20 +33,17 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
         try (InputStream inStream = new FileInputStream(project.file("scrap.json"))) {
             List<ReleasedPluginInformation> l = gson.fromJson(IOUtils.toString(inStream, Charset.defaultCharset()), listType);
 
-            Task analyzeAllTask = project.getTasks().create("analyze");
-
             CloneWebsite clone = project.getTasks().create("cloneRepo", CloneWebsite.class, (it) -> {
                 it.getRepositoryDirectory().set(project.getLayout().getBuildDirectory().dir("clone/repo"));
                 it.getRepositoryUri().set("https://github.com/gradle-plugins/gradle-plugins.github.io.git");
             });
 
-            Commit commit = project.getTasks().create("commit", Commit.class, (it) -> {
-                it.getRepositoryDirectory().set(clone.getRepositoryDirectory());
-                it.getUsername().set(System.getenv("USERNAME"));
-                it.getPassword().set(System.getenv("PASSWORD"));
-            });
+            int bucketCount = 5;
 
-            for (ReleasedPluginInformation p : l.subList(0, 3)) {
+            int i = 0;
+            for (ReleasedPluginInformation p : l) {
+                i++;
+                // TODO: Remove maybeCreate
                 Configuration c = project.getConfigurations().maybeCreate(p.getPluginId());
                 c.setTransitive(false);
                 c.setCanBeResolved(true);
@@ -54,17 +51,26 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
 
                 project.getDependencies().add(c.getName(), p.getNotation());
 
+                // TODO: Remove maybeCreate
                 AnalyzeBytecode analyzeTask = project.getTasks().maybeCreate(p.getPluginId(), AnalyzeBytecode.class);
                 analyzeTask.getJar().set(project.getLayout().file(project.provider(() -> c.getSingleFile())));
                 analyzeTask.getPluginId().set(p.getPluginId());
                 analyzeTask.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
 
-                analyzeAllTask.dependsOn(analyzeTask);
+                Task bucket = project.getTasks().maybeCreate("analyzeBucket" + (i % bucketCount));
+                bucket.dependsOn(analyzeTask);
 
+
+                // TODO: Remove maybeCreate
                 GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().maybeCreate("generate" + p.getPluginId(), GeneratePluginAnalysisDetailPage.class);
                 analysisDetailPage.getDetailHtml().set(clone.getRepositoryDirectory().file("plugins/" + p.getPluginId() + ".md"));
                 analysisDetailPage.getReport().set(analyzeTask.getReport());
 
+
+                Commit commit = project.getTasks().maybeCreate("commitBucket" + (i % bucketCount), Commit.class);
+                commit.getRepositoryDirectory().set(clone.getRepositoryDirectory());
+                commit.getUsername().set(System.getenv("USERNAME"));
+                commit.getPassword().set(System.getenv("PASSWORD"));
                 commit.getSource().from(analysisDetailPage.getDetailHtml());
             }
 
