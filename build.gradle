@@ -11,17 +11,6 @@ plugins {
     id 'java'
 }
 
-pluginManager.withPlugin("com.gradle.build-scan") {
-    if (System.getenv("TRAVIS") == "true") {
-        buildScan {
-            termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-            termsOfServiceAgree = 'yes'
-
-            publishAlways()
-        }
-    }
-}
-
 apply plugin: 'org.gradleplugins.do-it'
 
 apply plugin: 'org.gradleplugins.plugin-portal'
