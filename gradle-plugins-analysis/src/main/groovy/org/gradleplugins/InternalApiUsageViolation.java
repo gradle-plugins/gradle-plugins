@@ -4,13 +4,14 @@ import java.util.Objects;
 
 public class InternalApiUsageViolation implements AnalyzeViolation {
     private final String name;
+    private final String type = "internal-api-usage";
 
     public InternalApiUsageViolation(String name) {
         this.name = name;
     }
 
     public String getType() {
-        return "internal-api-usage";
+        return type;
     }
 
     public String getName() {
