@@ -11,8 +11,6 @@ plugins {
     id 'java'
 }
 
-apply plugin: 'org.gradleplugins.do-it'
-
 apply plugin: 'org.gradleplugins.plugin-portal'
 
 //println org.gradleplugins.GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).getAllPluginInformations()
