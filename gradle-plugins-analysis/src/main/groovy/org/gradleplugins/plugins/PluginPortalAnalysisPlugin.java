@@ -16,58 +16,51 @@
 
 package org.gradleplugins.plugins;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.io.IOUtils;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
+import org.gradleplugins.GradlePluginPortalJustPluginId;
 import org.gradleplugins.ReleasedPluginInformation;
 import org.gradleplugins.tasks.AnalyzeBytecode;
 import org.gradleplugins.tasks.CloneWebsite;
 import org.gradleplugins.tasks.Commit;
 import org.gradleplugins.tasks.GeneratePluginAnalysisDetailPage;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
 
 public class PluginPortalAnalysisPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<ReleasedPluginInformation>>(){}.getType();
-        try (InputStream inStream = new FileInputStream(project.file("scrap.json"))) {
-            List<ReleasedPluginInformation> l = gson.fromJson(IOUtils.toString(inStream, Charset.defaultCharset()), listType);
-
+        try {
             CloneWebsite clone = project.getTasks().create("cloneRepo", CloneWebsite.class, (it) -> {
                 it.getRepositoryDirectory().set(project.getLayout().getBuildDirectory().dir("clone/repo"));
                 it.getRepositoryUri().set("https://github.com/gradle-plugins/gradle-plugins.github.io.git");
             });
 
-            int bucketCount = 5;
+            int bucketCount = 1;
 
             int i = 0;
-            for (ReleasedPluginInformation p : l) {
+            for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).getAllPluginInformations()) {
                 i++;
-                // TODO: Remove maybeCreate
-                Configuration c = project.getConfigurations().maybeCreate(p.getPluginId());
-                c.setTransitive(false);
-                c.setCanBeResolved(true);
-                c.setCanBeConsumed(false);
-
-                project.getDependencies().add(c.getName(), p.getNotation());
-
                 // TODO: Remove maybeCreate
                 AnalyzeBytecode analyzeTask = project.getTasks().maybeCreate(p.getPluginId(), AnalyzeBytecode.class);
                 analyzeTask.getJar().set(project.getLayout().file(project.provider(() -> {
+                    // TODO: Remove maybeCreate
+                    Configuration c = project.getConfigurations().findByName(p.getPluginId());
+                    if (c == null) {
+                        c = project.getConfigurations().maybeCreate(p.getPluginId());
+                        c.setTransitive(false);
+                        c.setCanBeResolved(true);
+                        c.setCanBeConsumed(false);
+
+                        project.getDependencies().add(c.getName(), p.getNotation());
+                    }
+
                     Set<File> files = c.getResolvedConfiguration().getLenientConfiguration().getFiles();
                     if (files.isEmpty()) {
                         return null;
@@ -95,11 +88,8 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
                 commit.getPassword().set(System.getenv("PASSWORD"));
                 commit.getSource().from(analysisDetailPage.getDetailHtml());
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
 
         project.getRepositories().gradlePluginPortal();

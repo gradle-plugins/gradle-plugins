@@ -45,10 +45,10 @@ public class GradlePluginPortalJustPluginId {
 
     private static final int ASSUMING_PAGE_COUNT = 260;
 
-    public List<PluginInformation> getAllPluginInformations() {
+    public List<ReleasedPluginInformation> getAllPluginInformations() {
         ExecutorService executor = Executors.newFixedThreadPool(20);
 
-        List<Future<List<PluginInformation>>> futures = new ArrayList<>();
+        List<Future<List<ReleasedPluginInformation>>> futures = new ArrayList<>();
         for (int i = 0; i <= ASSUMING_PAGE_COUNT; ++i) {
             final int page = i;
             futures.add(executor.submit(() -> {
@@ -56,7 +56,7 @@ public class GradlePluginPortalJustPluginId {
             }));
         }
 
-        List<PluginInformation> pluginInfos = new ArrayList<>();
+        List<ReleasedPluginInformation> pluginInfos = new ArrayList<>();
         Document doc;
         String value = "/search?page=" + ASSUMING_PAGE_COUNT;
         do {
@@ -80,33 +80,33 @@ public class GradlePluginPortalJustPluginId {
                 URL portalUrl = url(g.first().attr("href"));
                 String pluginId = g.first().text();
 
-//                Elements h = it.select("td > p");
-//                assert h.size() == 1;
-//                String description = h.first().text();
-//
-//                Elements j = it.select("td[class=version] > span[class=latest-version]");
-//                assert j.size() == 1;
-//                String latestVersion = j.first().text();
-//
-//
-//                Document plugDoc = fetch(portalUrl);
-//                Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
-//                assert k.size() == 2;
-//                String notation = "";
-//                for (String s : k.get(1).text().split("\n")) {
-//                    if (s.trim().startsWith("classpath")) {
-//                        notation = s.trim().substring(11, s.trim().length() - 1);
-//                        break;
-//                    }
-//                }
+                Elements h = it.select("td > p");
+                assert h.size() == 1;
+                String description = h.first().text();
 
-                PluginInformation pluginInfo = new PluginInformation(pluginId, portalUrl);
+                Elements j = it.select("td[class=version] > span[class=latest-version]");
+                assert j.size() == 1;
+                String latestVersion = j.first().text();
+
+
+                Document plugDoc = fetch(portalUrl);
+                Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
+                assert k.size() == 2;
+                String notation = "";
+                for (String s : k.get(1).text().split("\n")) {
+                    if (s.trim().startsWith("classpath")) {
+                        notation = s.trim().substring(11, s.trim().length() - 1);
+                        break;
+                    }
+                }
+
+                ReleasedPluginInformation pluginInfo = new ReleasedPluginInformation(pluginId, portalUrl, description, latestVersion, notation);
                 pluginInfos.add(pluginInfo);
             }
         } while (!(value = hasMorePage(doc)).isEmpty());
 
-        List<PluginInformation> result = new ArrayList<>();
-        for (Future<List<PluginInformation>> f : futures) {
+        List<ReleasedPluginInformation> result = new ArrayList<>();
+        for (Future<List<ReleasedPluginInformation>> f : futures) {
             try {
                 result.addAll(f.get());
             } catch (InterruptedException e) {
@@ -124,9 +124,9 @@ public class GradlePluginPortalJustPluginId {
         return result;
     }
 
-    private List<PluginInformation> fetch(int page) {
+    private List<ReleasedPluginInformation> fetch(int page) {
         Document doc;
-        List<PluginInformation> pluginInfos = new ArrayList<>();
+        List<ReleasedPluginInformation> pluginInfos = new ArrayList<>();
 
         doc = fetch(url(page));
 
@@ -144,27 +144,27 @@ public class GradlePluginPortalJustPluginId {
             URL portalUrl = url(g.first().attr("href"));
             String pluginId = g.first().text();
 
-//                Elements h = it.select("td > p");
-//                assert h.size() == 1;
-//                String description = h.first().text();
-//
-//                Elements j = it.select("td[class=version] > span[class=latest-version]");
-//                assert j.size() == 1;
-//                String latestVersion = j.first().text();
-//
-//
-//                Document plugDoc = fetch(portalUrl);
-//                Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
-//                assert k.size() == 2;
-//                String notation = "";
-//                for (String s : k.get(1).text().split("\n")) {
-//                    if (s.trim().startsWith("classpath")) {
-//                        notation = s.trim().substring(11, s.trim().length() - 1);
-//                        break;
-//                    }
-//                }
+            Elements h = it.select("td > p");
+            assert h.size() == 1;
+            String description = h.first().text();
 
-            PluginInformation pluginInfo = new PluginInformation(pluginId, portalUrl);
+            Elements j = it.select("td[class=version] > span[class=latest-version]");
+            assert j.size() == 1;
+            String latestVersion = j.first().text();
+
+
+            Document plugDoc = fetch(portalUrl);
+            Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
+            assert k.size() == 2;
+            String notation = "";
+            for (String s : k.get(1).text().split("\n")) {
+                if (s.trim().startsWith("classpath")) {
+                    notation = s.trim().substring(11, s.trim().length() - 1);
+                    break;
+                }
+            }
+
+            ReleasedPluginInformation pluginInfo = new ReleasedPluginInformation(pluginId, portalUrl, description, latestVersion, notation);
             pluginInfos.add(pluginInfo);
         }
 

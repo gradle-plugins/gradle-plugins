@@ -1,8 +1,4 @@
 language: java
 env:
   - BUCKET=0
-  - BUCKET=1
-  - BUCKET=2
-  - BUCKET=3
-  - BUCKET=4
 script: ./gradlew continuousIntegration -s
