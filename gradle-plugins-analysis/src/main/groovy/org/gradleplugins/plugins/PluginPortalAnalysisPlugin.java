@@ -47,39 +47,38 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
             int i = 0;
             for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).getAllPluginInformations()) {
                 i++;
-                // TODO: Remove maybeCreate
-                AnalyzeBytecode analyzeTask = project.getTasks().maybeCreate(p.getPluginId(), AnalyzeBytecode.class);
-                analyzeTask.getJar().set(project.getLayout().file(project.provider(() -> {
-                    // TODO: Remove maybeCreate
-                    Configuration c = project.getConfigurations().findByName(p.getPluginId());
-                    if (c == null) {
-                        c = project.getConfigurations().maybeCreate(p.getPluginId());
-                        c.setTransitive(false);
-                        c.setCanBeResolved(true);
-                        c.setCanBeConsumed(false);
+                AnalyzeBytecode analyzeTask = project.getTasks().create(p.getPluginId(), AnalyzeBytecode.class, (it) -> {
+                        it.getJar().set(project.getLayout().file(project.provider(() -> {
+                            Configuration c = project.getConfigurations().findByName(p.getPluginId());
+                            if (c == null) {
+                                c = project.getConfigurations().create(p.getPluginId());
+                                c.setTransitive(false);
+                                c.setCanBeResolved(true);
+                                c.setCanBeConsumed(false);
 
-                        project.getDependencies().add(c.getName(), p.getNotation());
-                    }
+                                project.getDependencies().add(c.getName(), p.getNotation());
+                            }
 
-                    Set<File> files = c.getResolvedConfiguration().getLenientConfiguration().getFiles();
-                    if (files.isEmpty()) {
-                        return null;
-                    }
+                            Set<File> files = c.getResolvedConfiguration().getLenientConfiguration().getFiles();
+                            if (files.isEmpty()) {
+                                return null;
+                            }
 
-                    assert files.size() == 1;
-                    return files.iterator().next();
-                })));
-                analyzeTask.getPluginId().set(p.getPluginId());
-                analyzeTask.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
+                            assert files.size() == 1;
+                            return files.iterator().next();
+                        })));
+                        it.getPluginId().set(p.getPluginId());
+                        it.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
+                    });
 
                 Task bucket = project.getTasks().maybeCreate("analyzeBucket" + (i % bucketCount));
                 bucket.dependsOn(analyzeTask);
 
 
-                // TODO: Remove maybeCreate
-                GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().maybeCreate("generate" + p.getPluginId(), GeneratePluginAnalysisDetailPage.class);
-                analysisDetailPage.getDetailHtml().set(clone.getRepositoryDirectory().file("plugins/" + p.getPluginId() + ".md"));
-                analysisDetailPage.getReport().set(analyzeTask.getReport());
+                GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().create("generate" + p.getPluginId(), GeneratePluginAnalysisDetailPage.class, (it) -> {
+                    it.getDetailHtml().set(clone.getRepositoryDirectory().file("plugins/" + p.getPluginId() + ".md"));
+                    it.getReport().set(analyzeTask.getReport());
+                });
 
 
                 Commit commit = project.getTasks().maybeCreate("commitBucket" + (i % bucketCount), Commit.class);

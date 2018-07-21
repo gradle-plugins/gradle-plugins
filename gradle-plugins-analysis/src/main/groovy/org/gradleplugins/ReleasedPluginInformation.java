@@ -16,10 +16,9 @@
 
 package org.gradleplugins;
 
-import org.gradle.internal.impldep.com.google.common.base.Objects;
-
 import java.net.URI;
 import java.net.URL;
+import java.util.Objects;
 
 public class ReleasedPluginInformation {
     private final String pluginId;
@@ -57,13 +56,30 @@ public class ReleasedPluginInformation {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(ReleasedPluginInformation.class)
-                .add("pluginId", pluginId)
-                .add("portalUrl", portalUrl)
-                .add("description", description)
-                .add("latestVersion", latestVersion)
-                .add("notation", notation)
-                .toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReleasedPluginInformation that = (ReleasedPluginInformation) o;
+        return Objects.equals(pluginId, that.pluginId) &&
+            Objects.equals(portalUrl, that.portalUrl) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(latestVersion, that.latestVersion) &&
+            Objects.equals(notation, that.notation);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pluginId, portalUrl, description, latestVersion, notation);
+    }
+
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(ReleasedPluginInformation.class)
+//                .add("pluginId", pluginId)
+//                .add("portalUrl", portalUrl)
+//                .add("description", description)
+//                .add("latestVersion", latestVersion)
+//                .add("notation", notation)
+//                .toString();
+//    }
 }

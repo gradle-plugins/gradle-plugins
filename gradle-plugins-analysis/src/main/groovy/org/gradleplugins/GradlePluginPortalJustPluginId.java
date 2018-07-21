@@ -26,9 +26,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class GradlePluginPortalJustPluginId {
@@ -45,10 +43,10 @@ public class GradlePluginPortalJustPluginId {
 
     private static final int ASSUMING_PAGE_COUNT = 260;
 
-    public List<ReleasedPluginInformation> getAllPluginInformations() {
+    public Set<ReleasedPluginInformation> getAllPluginInformations() {
         ExecutorService executor = Executors.newFixedThreadPool(20);
 
-        List<Future<List<ReleasedPluginInformation>>> futures = new ArrayList<>();
+        List<Future<Set<ReleasedPluginInformation>>> futures = new ArrayList<>();
         for (int i = 0; i <= ASSUMING_PAGE_COUNT; ++i) {
             final int page = i;
             futures.add(executor.submit(() -> {
@@ -56,7 +54,7 @@ public class GradlePluginPortalJustPluginId {
             }));
         }
 
-        List<ReleasedPluginInformation> pluginInfos = new ArrayList<>();
+        Set<ReleasedPluginInformation> pluginInfos = new HashSet<>();
         Document doc;
         String value = "/search?page=" + ASSUMING_PAGE_COUNT;
         do {
@@ -105,8 +103,8 @@ public class GradlePluginPortalJustPluginId {
             }
         } while (!(value = hasMorePage(doc)).isEmpty());
 
-        List<ReleasedPluginInformation> result = new ArrayList<>();
-        for (Future<List<ReleasedPluginInformation>> f : futures) {
+        Set<ReleasedPluginInformation> result = new HashSet<>();
+        for (Future<Set<ReleasedPluginInformation>> f : futures) {
             try {
                 result.addAll(f.get());
             } catch (InterruptedException e) {
@@ -124,9 +122,9 @@ public class GradlePluginPortalJustPluginId {
         return result;
     }
 
-    private List<ReleasedPluginInformation> fetch(int page) {
+    private Set<ReleasedPluginInformation> fetch(int page) {
         Document doc;
-        List<ReleasedPluginInformation> pluginInfos = new ArrayList<>();
+        Set<ReleasedPluginInformation> pluginInfos = new HashSet<>();
 
         doc = fetch(url(page));
 
@@ -135,7 +133,7 @@ public class GradlePluginPortalJustPluginId {
         Elements noPlugin = e.first().select("td > em");
         if (noPlugin.size() == 1) {
             assert noPlugin.first().text() == "No plugins found.";
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         for (Element it : e) {
