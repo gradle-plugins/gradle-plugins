@@ -47,7 +47,7 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
             int i = 0;
             for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).getAllPluginInformations()) {
                 i++;
-                AnalyzeBytecode analyzeTask = project.getTasks().create(p.getPluginId(), AnalyzeBytecode.class, (it) -> {
+                AnalyzeBytecode analyzeTask = project.getTasks().create(p.getPluginId() + "_" + p.getLatestVersion(), AnalyzeBytecode.class, (it) -> {
                         it.getJar().set(project.getLayout().file(project.provider(() -> {
                             Configuration c = project.getConfigurations().findByName(p.getPluginId());
                             if (c == null) {
@@ -68,15 +68,15 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
                             return files.iterator().next();
                         })));
                         it.getPluginId().set(p.getPluginId());
-                        it.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + ".json"));
+                        it.getReport().set(project.getLayout().getBuildDirectory().file("analysisReport/" + p.getPluginId() + "_" + p.getLatestVersion() + ".json"));
                     });
 
                 Task bucket = project.getTasks().maybeCreate("analyzeBucket" + (i % bucketCount));
                 bucket.dependsOn(analyzeTask);
 
 
-                GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().create("generate" + p.getPluginId(), GeneratePluginAnalysisDetailPage.class, (it) -> {
-                    it.getDetailHtml().set(clone.getRepositoryDirectory().file("plugins/" + p.getPluginId() + ".md"));
+                GeneratePluginAnalysisDetailPage analysisDetailPage = project.getTasks().create("generate" + p.getPluginId() + "_" + p.getLatestVersion(), GeneratePluginAnalysisDetailPage.class, (it) -> {
+                    it.getDetailHtml().set(clone.getRepositoryDirectory().file("plugins/" + p.getPluginId() + "/" + p.getLatestVersion() + ".md"));
                     it.getReport().set(analyzeTask.getReport());
                 });
 

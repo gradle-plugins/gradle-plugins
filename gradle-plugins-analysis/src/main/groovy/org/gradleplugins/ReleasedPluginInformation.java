@@ -16,7 +16,6 @@
 
 package org.gradleplugins;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.Objects;
 
@@ -72,14 +71,14 @@ public class ReleasedPluginInformation {
         return Objects.hash(pluginId, portalUrl, description, latestVersion, notation);
     }
 
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(ReleasedPluginInformation.class)
-//                .add("pluginId", pluginId)
-//                .add("portalUrl", portalUrl)
-//                .add("description", description)
-//                .add("latestVersion", latestVersion)
-//                .add("notation", notation)
-//                .toString();
-//    }
+    @Override
+    public String toString() {
+        return org.gradle.internal.impldep.com.google.common.base.Objects.toStringHelper(ReleasedPluginInformation.class)
+                .add("pluginId", pluginId)
+                .add("portalUrl", portalUrl)
+                .add("description", description)
+                .add("latestVersion", latestVersion)
+                .add("notation", notation)
+                .toString();
+    }
 }

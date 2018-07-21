@@ -89,6 +89,7 @@ public class GeneratePluginAnalysisDetailPage extends DefaultTask {
 
             Map<String,Object> map = (Map<String, Object>) yaml.load(prettyJSONString);
 
+            detailHtml.getParentFile().mkdirs();
             try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(detailHtml)))) {
                 out.println("---");
                 out.println("layout: plugin");
