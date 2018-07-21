@@ -29,6 +29,7 @@ import org.gradle.workers.IsolationMode;
 import org.gradle.workers.WorkerExecutor;
 import org.gradleplugins.AnalyzeReport;
 import org.gradleplugins.AnalyzeViolation;
+import org.gradleplugins.InternalApiUsageViolation;
 import org.objectweb.asm.*;
 
 import javax.inject.Inject;
@@ -157,7 +158,7 @@ public class AnalyzeBytecode extends DefaultTask {
 //                    System.out.println("Field: "+name+" "+desc+" value:"+value);
                     if (isInternalApis(desc)) {
 //                        System.out.println("USING INTERNAL APIS (FIELD)");
-                        reportAnalysis.getViolations().add(new AnalyzeViolation("Using internal APIS (field) " + desc));
+                        reportAnalysis.getViolations().add(new InternalApiUsageViolation(desc));
                     }
                     return super.visitField(access, name, desc, signature, value);
                 }
@@ -182,7 +183,7 @@ public class AnalyzeBytecode extends DefaultTask {
 //                            System.out.println("Type insn: " + type);
                             if (isInternalApis(type)) {
 //                                System.out.println("USING INTERNAL APIS (INSTANTIATE)");
-                                reportAnalysis.getViolations().add(new AnalyzeViolation("Using internal APIS (instantiate) " + type));
+                                reportAnalysis.getViolations().add(new InternalApiUsageViolation(type));
                             }
                             super.visitTypeInsn(opcode, type);
                         }

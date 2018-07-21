@@ -16,14 +16,14 @@
 
 package org.gradleplugins;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AnalyzeReport {
     private final String pluginId;
     private final boolean isJarAvailable;
     private final String error;
-    private final List<AnalyzeViolation> violations = new ArrayList<>();
+    private final Set<AnalyzeViolation> violations = new HashSet<>();
 
     public AnalyzeReport(String pluginId) {
         this(pluginId, true);
@@ -51,7 +51,7 @@ public class AnalyzeReport {
         return error;
     }
 
-    public List<AnalyzeViolation> getViolations() {
+    public Set<AnalyzeViolation> getViolations() {
         return violations;
     }
 
