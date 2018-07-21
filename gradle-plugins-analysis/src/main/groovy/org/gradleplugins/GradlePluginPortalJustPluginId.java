@@ -194,7 +194,7 @@ public class GradlePluginPortalJustPluginId {
 
     private Document fetch(URL url) {
         try {
-            System.out.println("Fetching " + url.toString());
+//            System.out.println("Fetching " + url.toString());
             return Jsoup.parse(new String(IOUtils.toByteArray(url)));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
