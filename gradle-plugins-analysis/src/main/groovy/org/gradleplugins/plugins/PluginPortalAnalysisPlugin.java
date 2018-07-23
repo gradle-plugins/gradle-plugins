@@ -20,7 +20,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
-import org.gradleplugins.GradlePluginPortalJustPluginId;
+import org.gradleplugins.GradlePluginPortal;
 import org.gradleplugins.ReleasedPluginInformation;
 import org.gradleplugins.tasks.AnalyzeBytecode;
 import org.gradleplugins.tasks.CloneWebsite;
@@ -45,7 +45,7 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
             int bucketCount = 1;
 
             int i = 0;
-            for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).assumingPageCount(260).getAllPluginInformations()) {
+            for (ReleasedPluginInformation p : GradlePluginPortal.connect(new URL("https://plugins.gradle.org/")).assumingPageCount(260).getAllPluginInformations()) {
                 i++;
                 AnalyzeBytecode analyzeTask = project.getTasks().create(p.getPluginId() + "_" + p.getLatestVersion(), AnalyzeBytecode.class, (it) -> {
                         it.getJar().set(project.getLayout().file(project.provider(() -> {

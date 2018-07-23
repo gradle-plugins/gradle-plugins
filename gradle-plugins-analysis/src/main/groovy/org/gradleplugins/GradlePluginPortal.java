@@ -17,54 +17,145 @@
 package org.gradleplugins;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.LogManager;
-import org.gradle.api.logging.Logger;
-import org.gradle.api.logging.LoggingManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class GradlePluginPortal {
 //    private static final Logger LOGGER = LogManager.getLogger(GradlePluginPortal.class);
-    private final URL pluginPortalUrl;
+    private final URL portalUrl;
+    private int assumingPageCount = 0;
 
-    GradlePluginPortal(URL pluginPortalUrl) {
-        this.pluginPortalUrl = pluginPortalUrl;
+    GradlePluginPortal(URL portalUrl) {
+        this.portalUrl = portalUrl;
     }
 
     public static GradlePluginPortal connect(URL pluginPortalUrl) {
         return new GradlePluginPortal(pluginPortalUrl);
     }
 
-    public List<ReleasedPluginInformation> getAllPluginInformations() {
-        List<ReleasedPluginInformation> pluginInfos = new ArrayList<>();
-        Document doc;
+    public GradlePluginPortal assumingPageCount(int assumingPageCount) {
+        this.assumingPageCount = assumingPageCount;
+        return this;
+    }
+
+    public Set<ReleasedPluginInformation> getAllPluginInformations() {
+        ExecutorService executor = null;
+        List<Future<Set<ReleasedPluginInformation>>> futures = new ArrayList<>();
+        if (assumingPageCount > 0) {
+            executor = Executors.newFixedThreadPool(20);
+            for (int i = 0; i <= assumingPageCount; ++i) {
+                final int page = i;
+                futures.add(executor.submit(() -> {
+                    return get(page).getPlugins();
+                }));
+            }
+        }
+
+        Set<ReleasedPluginInformation> pluginInfos = new HashSet<>();
         String value = "";
-        do {
-            if (value.isEmpty()) {
-                doc = fetch(pluginPortalUrl);
-            } else {
-                doc = fetch(url(value));
+        if (assumingPageCount > 0) {
+            value = "/search?page=" + assumingPageCount;
+        }
+
+        for (SearchPage page = new SearchPage(url(value), this); page.hasMoreSearchPage(); page = page.getNextSearchPage()) {
+            pluginInfos.addAll(page.getPlugins());
+        }
+
+        Set<ReleasedPluginInformation> result = new HashSet<>();
+        for (Future<Set<ReleasedPluginInformation>> f : futures) {
+            try {
+                result.addAll(f.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (executor != null) {
+            executor.shutdown();
+        }
+
+        result.addAll(pluginInfos);
+
+
+        return result;
+    }
+
+    private String getRootUrl() {
+        int g = portalUrl.toString().lastIndexOf('/');
+        return portalUrl.toString().substring(0, g);
+    }
+
+    private SearchPage get(int pageNumber) {
+        return new SearchPage(url(pageNumber), this);
+    }
+
+    private URL url(int page) {
+        try {
+            return new URL(getRootUrl() + "/search?page=" + page);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private URL url(String path) {
+        try {
+            return new URL(getRootUrl() + path);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static class SearchPage {
+        private final URL searchPageUrl;
+        private final GradlePluginPortal thiz;
+        private Document searchPageDocument;
+        private Set<ReleasedPluginInformation> scrappedPlugins;
+
+        public SearchPage(URL searchPageUrl, GradlePluginPortal thiz) {
+            this.searchPageUrl = searchPageUrl;
+            this.thiz = thiz;
+        }
+
+        public Set<ReleasedPluginInformation> getPlugins() {
+            if (scrappedPlugins == null) {
+                Elements e = getSearchPageDocument().select("#search-results > tbody > tr");
+
+                if (hasPlugins(e)) {
+                    scrappedPlugins = scrapPlugins(e);
+                } else {
+                    scrappedPlugins = Collections.emptySet();
+                }
             }
 
-            Elements e = doc.select("#search-results > tbody > tr");
+            return scrappedPlugins;
+        }
 
+        private static boolean hasPlugins(Elements e) {
+            Elements noPlugin = e.first().select("td > em");
+            if (noPlugin.size() == 1) {
+                assert noPlugin.first().text() == "No plugins found.";
+                return false;
+            }
+            return true;
+        }
+
+        private Set<ReleasedPluginInformation> scrapPlugins(Elements e) {
+            Set<ReleasedPluginInformation> result = new HashSet<>();
             for (Element it : e) {
                 Elements g = it.select("td > h3 > a");
                 assert g.size() == 1;
-                URL portalUrl = url(g.first().attr("href"));
+                URL portalUrl = thiz.url(g.first().attr("href"));
                 String pluginId = g.first().text();
 
                 Elements h = it.select("td > p");
@@ -88,47 +179,49 @@ public class GradlePluginPortal {
                 }
 
                 ReleasedPluginInformation pluginInfo = new ReleasedPluginInformation(pluginId, portalUrl, description, latestVersion, notation);
-                pluginInfos.add(pluginInfo);
+                result.add(pluginInfo);
             }
-        } while (!(value = hasMorePage(doc)).isEmpty());
 
-        return pluginInfos;
-    }
-
-    private String getRootUrl() {
-        int g = pluginPortalUrl.toString().lastIndexOf('/');
-        return pluginPortalUrl.toString().substring(0, g);
-    }
-
-    private URL url(String path) {
-        try {
-            return new URL(getRootUrl() + path);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            return result;
         }
-    }
 
-    private Document fetch(URL url) {
-        try {
+        public boolean hasMoreSearchPage() {
+            return hasMorePage(getSearchPageDocument()).length() > 0;
+        }
+
+        public SearchPage getNextSearchPage() {
+            return new SearchPage(thiz.url(hasMorePage(getSearchPageDocument())), thiz);
+        }
+
+        private static String hasMorePage(Document doc) {
+            Elements g = doc.select("div[class=page-link clearfix] > a");
+            if (g.size() == 0) {
+                return "";
+            } else if (g.size() == 2) {
+                return g.get(1).attr("href");
+            } else {
+                assert g.size() == 1;
+                if (g.first().text().equals("Next")) {
+                    return g.first().attr("href");
+                }
+                return "";
+            }
+        }
+
+        private Document getSearchPageDocument() {
+            if (searchPageDocument == null) {
+                searchPageDocument = fetch(searchPageUrl);
+            }
+            return searchPageDocument;
+        }
+
+        private static Document fetch(URL url) {
+            try {
 //            System.out.println("Fetching " + url.toString());
-            return Jsoup.parse(new String(IOUtils.toByteArray(url)));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private String hasMorePage(Document doc) {
-        Elements g = doc.select("div[class=page-link clearfix] > a");
-        if (g.size() == 0) {
-            return "";
-        } else if (g.size() == 2) {
-            return g.get(1).attr("href");
-        } else {
-            assert g.size() == 1;
-            if (g.first().text().equals("Next")) {
-                return g.first().attr("href");
+                return Jsoup.parse(new String(IOUtils.toByteArray(url)));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
             }
-            return "";
         }
     }
 }

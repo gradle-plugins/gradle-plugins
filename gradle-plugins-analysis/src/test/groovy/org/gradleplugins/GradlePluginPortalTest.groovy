@@ -22,7 +22,7 @@ import spock.lang.Subject
 @Subject(GradlePluginPortal)
 class GradlePluginPortalTest extends Specification {
     def "can page scrap the plugin information"() {
-        def portal = GradlePluginPortalJustPluginId.connect(GradlePluginPortalTest.class.getResource("single/search.html"))
+        def portal = GradlePluginPortal.connect(GradlePluginPortalTest.class.getResource("single/search.html"))
 
         expect:
         def plugins = portal.allPluginInformations
@@ -34,7 +34,7 @@ class GradlePluginPortalTest extends Specification {
     }
 
     def "can scrap multiple pages"() {
-        def portal = GradlePluginPortalJustPluginId.connect(GradlePluginPortalTest.class.getResource("multi/search.html"))
+        def portal = GradlePluginPortal.connect(GradlePluginPortalTest.class.getResource("multi/search.html"))
 
         expect:
         portal.allPluginInformations.size() == 30
