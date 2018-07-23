@@ -45,7 +45,7 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
             int bucketCount = 1;
 
             int i = 0;
-            for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).getAllPluginInformations()) {
+            for (ReleasedPluginInformation p : GradlePluginPortalJustPluginId.connect(new URL("https://plugins.gradle.org/")).assumingPageCount(260).getAllPluginInformations()) {
                 i++;
                 AnalyzeBytecode analyzeTask = project.getTasks().create(p.getPluginId() + "_" + p.getLatestVersion(), AnalyzeBytecode.class, (it) -> {
                         it.getJar().set(project.getLayout().file(project.provider(() -> {
