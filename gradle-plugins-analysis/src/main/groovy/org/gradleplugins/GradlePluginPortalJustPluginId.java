@@ -61,27 +61,13 @@ public class GradlePluginPortalJustPluginId {
         }
 
         Set<ReleasedPluginInformation> pluginInfos = new HashSet<>();
-        Document doc;
         String value = "";
         if (assumingPageCount > 0) {
             value = "/search?page=" + assumingPageCount;
         }
 
-        for (SearchPage page = new SearchPage(url(value)); page.hasMoreSearchPage(); page = page.getNextSearchPage()) {
-
-
+        for (SearchPage page = new SearchPage(url(value), this); page.hasMoreSearchPage(); page = page.getNextSearchPage()) {
             pluginInfos.addAll(page.getPlugins());
-//            doc = fetch(url(value));
-//
-//            Elements e = doc.select("#search-results > tbody > tr");
-//
-//            if (!hasPlugins(e)) {
-//                break;
-//            }
-//
-//            pluginInfos.addAll(scrapPlugins(e));
-
-//        } while (!(value = hasMorePage(doc)).isEmpty());
         }
 
         Set<ReleasedPluginInformation> result = new HashSet<>();
@@ -105,78 +91,13 @@ public class GradlePluginPortalJustPluginId {
         return result;
     }
 
-    private Set<ReleasedPluginInformation> fetch(int page) {
-        Document doc;
-        Set<ReleasedPluginInformation> pluginInfos = new HashSet<>();
-
-        doc = fetch(url(page));
-
-        Elements e = doc.select("#search-results > tbody > tr");
-
-        if (!hasPlugins(e)) {
-            return Collections.emptySet();
-        }
-
-        pluginInfos.addAll(scrapPlugins(e));
-
-        return pluginInfos;
-    }
-
-    private static boolean hasPlugins(Elements e) {
-        Elements noPlugin = e.first().select("td > em");
-        if (noPlugin.size() == 1) {
-            assert noPlugin.first().text() == "No plugins found.";
-            return false;
-        }
-        return true;
-    }
-
-    private Set<ReleasedPluginInformation> scrapPlugins(Elements e) {
-        Set<ReleasedPluginInformation> result = new HashSet<>();
-        for (Element it : e) {
-            Elements g = it.select("td > h3 > a");
-            assert g.size() == 1;
-            URL portalUrl = url(g.first().attr("href"));
-            String pluginId = g.first().text();
-
-            Elements h = it.select("td > p");
-            assert h.size() == 1;
-            String description = h.first().text();
-
-            Elements j = it.select("td[class=version] > span[class=latest-version]");
-            assert j.size() == 1;
-            String latestVersion = j.first().text();
-
-
-            Document plugDoc = fetch(portalUrl);
-            Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
-            assert k.size() == 2;
-            String notation = "";
-            for (String s : k.get(1).text().split("\n")) {
-                if (s.trim().startsWith("classpath")) {
-                    notation = s.trim().substring(11, s.trim().length() - 1);
-                    break;
-                }
-            }
-
-            ReleasedPluginInformation pluginInfo = new ReleasedPluginInformation(pluginId, portalUrl, description, latestVersion, notation);
-            result.add(pluginInfo);
-        }
-
-        return result;
-    }
-
     private String getRootUrl() {
         int g = portalUrl.toString().lastIndexOf('/');
         return portalUrl.toString().substring(0, g);
     }
 
-    private URL url(String path) {
-        try {
-            return new URL(getRootUrl() + path);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    private SearchPage get(int pageNumber) {
+        return new SearchPage(url(pageNumber), this);
     }
 
     private URL url(int page) {
@@ -187,83 +108,23 @@ public class GradlePluginPortalJustPluginId {
         }
     }
 
-    private Document fetch(URL url) {
+    private URL url(String path) {
         try {
-//            System.out.println("Fetching " + url.toString());
-            return Jsoup.parse(new String(IOUtils.toByteArray(url)));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            return new URL(getRootUrl() + path);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private String hasMorePage(Document doc) {
-        Elements g = doc.select("div[class=page-link clearfix] > a");
-        if (g.size() == 0) {
-            return "";
-        } else if (g.size() == 2) {
-            return g.get(1).attr("href");
-        } else {
-            assert g.size() == 1;
-            if (g.first().text().equals("Next")) {
-                return g.first().attr("href");
-            }
-            return "";
-        }
-    }
-
-    private SearchPage get(int pageNumber) {
-        return new SearchPage(url(pageNumber));
-    }
-
-//    private class SearchPageChainingIterator implements Iterator<SearchPage> {
-//
-//
-//        @Override
-//        public boolean hasNext() {
-//            return false;
-//        }
-//
-//        @Override
-//        public SearchPage next() {
-//            return null;
-//        }
-//
-//        @Override
-//        public void remove() {
-//
-//        }
-//    }
-//
-//    private class AssumingSearchPageIterator implements Iterator<SearchPage> {
-//        private int pageNumber = -1;
-//        private SearchPage lastSearchPage = null;
-//
-//        @Override
-//        public boolean hasNext() {
-//            if (lastSearchPage != null) {
-//                return lastSearchPage.hasMoreSearchPage();
-//            }
-//            return true;
-//        }
-//
-//        @Override
-//        public SearchPage next() {
-//            return lastSearchPage = new SearchPage(url(pageNumber++));
-//        }
-//
-//        @Override
-//        public void remove() {
-//            throw new UnsupportedOperationException();
-//        }
-//    }
-
-    private class SearchPage {
+    private static class SearchPage {
         private final URL searchPageUrl;
+        private final GradlePluginPortalJustPluginId thiz;
         private Document searchPageDocument;
         private Set<ReleasedPluginInformation> scrappedPlugins;
 
-        public SearchPage(URL searchPageUrl) {
+        public SearchPage(URL searchPageUrl, GradlePluginPortalJustPluginId thiz) {
             this.searchPageUrl = searchPageUrl;
+            this.thiz = thiz;
         }
 
         public Set<ReleasedPluginInformation> getPlugins() {
@@ -280,12 +141,71 @@ public class GradlePluginPortalJustPluginId {
             return scrappedPlugins;
         }
 
+        private static boolean hasPlugins(Elements e) {
+            Elements noPlugin = e.first().select("td > em");
+            if (noPlugin.size() == 1) {
+                assert noPlugin.first().text() == "No plugins found.";
+                return false;
+            }
+            return true;
+        }
+
+        private Set<ReleasedPluginInformation> scrapPlugins(Elements e) {
+            Set<ReleasedPluginInformation> result = new HashSet<>();
+            for (Element it : e) {
+                Elements g = it.select("td > h3 > a");
+                assert g.size() == 1;
+                URL portalUrl = thiz.url(g.first().attr("href"));
+                String pluginId = g.first().text();
+
+                Elements h = it.select("td > p");
+                assert h.size() == 1;
+                String description = h.first().text();
+
+                Elements j = it.select("td[class=version] > span[class=latest-version]");
+                assert j.size() == 1;
+                String latestVersion = j.first().text();
+
+
+                Document plugDoc = fetch(portalUrl);
+                Elements k = plugDoc.select("div[class=use] > pre > code[class=language-groovy]");
+                assert k.size() == 2;
+                String notation = "";
+                for (String s : k.get(1).text().split("\n")) {
+                    if (s.trim().startsWith("classpath")) {
+                        notation = s.trim().substring(11, s.trim().length() - 1);
+                        break;
+                    }
+                }
+
+                ReleasedPluginInformation pluginInfo = new ReleasedPluginInformation(pluginId, portalUrl, description, latestVersion, notation);
+                result.add(pluginInfo);
+            }
+
+            return result;
+        }
+
         public boolean hasMoreSearchPage() {
             return hasMorePage(getSearchPageDocument()).length() > 0;
         }
 
         public SearchPage getNextSearchPage() {
-            return new SearchPage(url(hasMorePage(getSearchPageDocument())));
+            return new SearchPage(thiz.url(hasMorePage(getSearchPageDocument())), thiz);
+        }
+
+        private static String hasMorePage(Document doc) {
+            Elements g = doc.select("div[class=page-link clearfix] > a");
+            if (g.size() == 0) {
+                return "";
+            } else if (g.size() == 2) {
+                return g.get(1).attr("href");
+            } else {
+                assert g.size() == 1;
+                if (g.first().text().equals("Next")) {
+                    return g.first().attr("href");
+                }
+                return "";
+            }
         }
 
         private Document getSearchPageDocument() {
@@ -293,6 +213,15 @@ public class GradlePluginPortalJustPluginId {
                 searchPageDocument = fetch(searchPageUrl);
             }
             return searchPageDocument;
+        }
+
+        private static Document fetch(URL url) {
+            try {
+//            System.out.println("Fetching " + url.toString());
+                return Jsoup.parse(new String(IOUtils.toByteArray(url)));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
     }
 }
