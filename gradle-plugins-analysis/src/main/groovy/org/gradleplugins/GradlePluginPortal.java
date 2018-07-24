@@ -37,6 +37,7 @@ public class GradlePluginPortal {
     private final URL portalUrl;
     private int assumingPageCount = 0;
     private File cacheFile;
+    private boolean offline = true;
 
     GradlePluginPortal(URL portalUrl) {
         this.portalUrl = portalUrl;
@@ -56,12 +57,24 @@ public class GradlePluginPortal {
         return this;
     }
 
+    public GradlePluginPortal withGradleOffline(boolean offline) {
+        this.offline = offline;
+        return this;
+    }
+
     public Set<ReleasedPluginInformation> getAllPluginInformations() {
-        if (cacheFile != null && cacheFile.exists() && System.getProperty("USE_CACHE", "false").equals("true")) {
+        if (cacheFile != null && cacheFile.exists() && (System.getProperty("USE_CACHE", "false").equals("true") || offline)) {
             Gson gson = new Gson();
             try (InputStream inStream = new FileInputStream(cacheFile)) {
-                Type type = new TypeToken<Set<ReleasedPluginInformation>>(){}.getType();
+                Type type = new TypeToken<Set<ReleasedPluginInformation>>() {
+                }.getType();
                 return gson.fromJson(IOUtils.toString(inStream, Charset.defaultCharset()), type);
+            } catch (FileNotFoundException e) {
+                if (offline) {
+                    throw new RuntimeException("Offline and no cache");
+                } else {
+                    System.out.println("No cache, will regenerate");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

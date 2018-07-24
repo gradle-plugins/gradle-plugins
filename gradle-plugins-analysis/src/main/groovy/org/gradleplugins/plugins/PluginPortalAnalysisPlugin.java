@@ -54,7 +54,7 @@ public class PluginPortalAnalysisPlugin implements Plugin<Project> {
 
             TaskProvider<Task> bucket = project.getTasks().register("analyzeBucket0");
 
-            for (ReleasedPluginInformation p : GradlePluginPortal.connect(new URL("https://plugins.gradle.org/")).assumingPageCount(260).withCache(project.file("plugins.cache")).getAllPluginInformations()) {
+            for (ReleasedPluginInformation p : GradlePluginPortal.connect(new URL("https://plugins.gradle.org/")).assumingPageCount(260).withCache(project.file("plugins.cache")).withGradleOffline(project.getGradle().getStartParameter().isOffline()).getAllPluginInformations()) {
                 ReleasedPluginInformation pp = p;
                 TaskProvider<AnalyzeBytecode> analyzeTask = project.getTasks().register(p.getPluginId() + "_" + p.getVersion(), AnalyzeBytecode.class, (it) -> {
                     it.getJarSha1().set(project.provider(new Callable<String>() {
