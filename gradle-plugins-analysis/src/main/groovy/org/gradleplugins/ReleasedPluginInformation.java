@@ -23,14 +23,14 @@ public class ReleasedPluginInformation {
     private final String pluginId;
     private final URL portalUrl;
     private final String description;
-    private final String latestVersion;
+    private final String version;
     private final String notation;
 
-    public ReleasedPluginInformation(String pluginId, URL portalUrl, String description, String latestVersion, String notation) {
+    public ReleasedPluginInformation(String pluginId, URL portalUrl, String description, String version, String notation) {
         this.pluginId = pluginId;
         this.portalUrl = portalUrl;
         this.description = description;
-        this.latestVersion = latestVersion;
+        this.version = version;
         this.notation = notation;
     }
 
@@ -46,8 +46,8 @@ public class ReleasedPluginInformation {
         return description;
     }
 
-    public String getLatestVersion() {
-        return latestVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getNotation() {
@@ -62,13 +62,13 @@ public class ReleasedPluginInformation {
         return Objects.equals(pluginId, that.pluginId) &&
             Objects.equals(portalUrl, that.portalUrl) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(latestVersion, that.latestVersion) &&
+            Objects.equals(version, that.version) &&
             Objects.equals(notation, that.notation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pluginId, portalUrl, description, latestVersion, notation);
+        return Objects.hash(pluginId, portalUrl, description, version, notation);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ReleasedPluginInformation {
                 .add("pluginId", pluginId)
                 .add("portalUrl", portalUrl)
                 .add("description", description)
-                .add("latestVersion", latestVersion)
+                .add("version", version)
                 .add("notation", notation)
                 .toString();
     }
