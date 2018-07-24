@@ -39,6 +39,7 @@ import java.nio.charset.Charset;
 public class AnalyzeBytecode extends DefaultTask {
     private final Property<String> pluginId = getProject().getObjects().property(String.class);
     private final RegularFileProperty jar = newInputFile();
+    private final Property<String> jarSha1 = getProject().getObjects().property(String.class);
     private final RegularFileProperty report = newOutputFile();
 
     @Inject
@@ -53,6 +54,11 @@ public class AnalyzeBytecode extends DefaultTask {
     @InputFile
     public RegularFileProperty getJar() {
         return jar;
+    }
+
+    @Input
+    public Property<String> getJarSha1() {
+        return jarSha1;
     }
 
     @Input
@@ -77,7 +83,7 @@ public class AnalyzeBytecode extends DefaultTask {
         } else {
             getWorkerExecutor().submit(AnalysisRunnable.class, (workerConfiguration) -> {
                 workerConfiguration.setIsolationMode(IsolationMode.NONE);
-                workerConfiguration.params(pluginId.get(), jar.getAsFile().get(), report.getAsFile().get());
+                workerConfiguration.params(pluginId.get(), jar.getAsFile().get(), jarSha1.get(), report.getAsFile().get());
             });
         }
     }
@@ -85,18 +91,20 @@ public class AnalyzeBytecode extends DefaultTask {
     public static class AnalysisRunnable implements Runnable {
         private final String pluginId;
         private final File jar;
+        private final String jarSha1;
         private final File report;
 
         @Inject
-        AnalysisRunnable(String pluginId, File jar, File report) {
+        AnalysisRunnable(String pluginId, File jar, String jarSha1, File report) {
             this.pluginId = pluginId;
             this.jar = jar;
+            this.jarSha1 = jarSha1;
             this.report = report;
         }
 
         @Override
         public void run() {
-            final AnalyzeReport reportAnalysis = new AnalyzeReport(pluginId);
+            final AnalyzeReport reportAnalysis = new AnalyzeReport(pluginId, jarSha1);
             ClassVisitor cl=new ClassVisitor(Opcodes.ASM6) {
 
                 /**

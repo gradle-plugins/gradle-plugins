@@ -21,20 +21,22 @@ import java.util.Set;
 
 public class AnalyzeReport {
     private final String pluginId;
+    private final String jarSha1;
     private final boolean isJarAvailable;
     private final String error;
     private final Set<AnalyzeViolation> violations = new HashSet<>();
 
-    public AnalyzeReport(String pluginId) {
-        this(pluginId, true);
+    public AnalyzeReport(String pluginId, String jarSha1) {
+        this(pluginId, jarSha1,true);
     }
 
-    private AnalyzeReport(String pluginId, boolean isJarAvailable) {
-        this(pluginId, isJarAvailable, "NONE");
+    private AnalyzeReport(String pluginId, String jarSha1, boolean isJarAvailable) {
+        this(pluginId, jarSha1, isJarAvailable, "NONE");
     }
 
-    private AnalyzeReport(String pluginId, boolean isJarAvailable, String error) {
+    private AnalyzeReport(String pluginId, String jarSha1, boolean isJarAvailable, String error) {
         this.pluginId = pluginId;
+        this.jarSha1 = jarSha1;
         this.isJarAvailable = isJarAvailable;
         this.error = error;
     }
@@ -56,11 +58,11 @@ public class AnalyzeReport {
     }
 
     public static AnalyzeReport noJarResolved(String pluginId) {
-        return new AnalyzeReport(pluginId, false);
+        return new AnalyzeReport(pluginId, "INVALID", false);
     }
 
     public AnalyzeReport toAnalysisError(Throwable throwable) {
-        AnalyzeReport result = new AnalyzeReport(pluginId, isJarAvailable, throwable.getMessage());
+        AnalyzeReport result = new AnalyzeReport(pluginId, jarSha1, isJarAvailable, throwable.getMessage());
         result.getViolations().addAll(getViolations());
         return result;
     }
