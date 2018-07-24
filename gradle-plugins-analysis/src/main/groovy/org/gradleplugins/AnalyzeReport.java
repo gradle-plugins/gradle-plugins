@@ -30,7 +30,7 @@ public class AnalyzeReport {
     }
 
     private AnalyzeReport(String pluginId, boolean isJarAvailable) {
-        this(pluginId, isJarAvailable, "");
+        this(pluginId, isJarAvailable, "NONE");
     }
 
     private AnalyzeReport(String pluginId, boolean isJarAvailable, String error) {
