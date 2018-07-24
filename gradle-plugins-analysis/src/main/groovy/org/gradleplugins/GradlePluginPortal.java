@@ -16,16 +16,19 @@
 
 package org.gradleplugins;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -33,6 +36,7 @@ public class GradlePluginPortal {
 //    private static final Logger LOGGER = LogManager.getLogger(GradlePluginPortal.class);
     private final URL portalUrl;
     private int assumingPageCount = 0;
+    private File cacheFile;
 
     GradlePluginPortal(URL portalUrl) {
         this.portalUrl = portalUrl;
@@ -47,7 +51,22 @@ public class GradlePluginPortal {
         return this;
     }
 
+    public GradlePluginPortal withCache(File cacheFile) {
+        this.cacheFile = cacheFile;
+        return this;
+    }
+
     public Set<ReleasedPluginInformation> getAllPluginInformations() {
+        if (cacheFile != null && cacheFile.exists() && System.getProperty("USE_CACHE", "false").equals("true")) {
+            Gson gson = new Gson();
+            try (InputStream inStream = new FileInputStream(cacheFile)) {
+                Type type = new TypeToken<Set<ReleasedPluginInformation>>(){}.getType();
+                return gson.fromJson(IOUtils.toString(inStream, Charset.defaultCharset()), type);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         ExecutorService executor = null;
         List<Future<Set<ReleasedPluginInformation>>> futures = new ArrayList<>();
         if (assumingPageCount > 0) {
@@ -87,6 +106,15 @@ public class GradlePluginPortal {
 
         result.addAll(pluginInfos);
 
+        if (cacheFile != null) {
+            cacheFile.getParentFile().mkdirs();
+            Gson gson = new Gson();
+            try (PrintWriter outStream = new PrintWriter(new FileOutputStream(cacheFile))) {
+                outStream.print(gson.toJson(result));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         return result;
     }
